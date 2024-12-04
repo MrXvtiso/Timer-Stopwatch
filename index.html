@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: monospace;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #0e0e0e;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        background-color: #1d1d1d;
+        border-radius: 15px;
+        padding-inline: 110px;
+        padding-block: 30px;
+    }
+
+    .buttons-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    label {
+        font-size: 80px;
+    }
+
+    .labelsTimer {
+        width: 350px;
+        text-align: center;
+        transition: 0.3s ease;
+        color: white;
+    }
+
+    .labelsStopWatch {
+        width: 400px;
+        text-align: center;
+        transition: 0.3s ease;
+        color: white;
+    }
+
+    button {
+        height: 30px;
+        width: 60px;
+        cursor: pointer;
+        border-radius: 15px;
+        background-color: #333;
+        color: white;
+        border: none;
+        transition: .2s ease;
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+    }
+
+    button:active {
+        transform: translateY(3px);
+    }
+
+    #resumeCountdown,
+    #resumeCount {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 100px;
+        padding-block: 30px;
+        font-size: 2rem;
+    }
+
+    #startCountdown,
+    #pauseCountdown,
+    #resetCountdown,
+    #startCount,
+    #pauseCount,
+    #resetCount {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-inline: 100px;
+        padding-block: 30px;
+        font-size: 2rem;
+    }
+
+    .btns {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .timeup {
+        position: absolute;
+        top: 45%;
+        color: red;
+        font-size: 1.5rem;
+        height: 0;
+        overflow: hidden;
+        transition: 0.5s ease-in-out;
+    }
+
+    .slide-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #stopWatchBtn {
+        height: 40px;
+        width: 100px;
+        font-weight: bold;
+        font-size: 1.3em;
+
+    }
+
+    #timerBtn {
+        height: 40px;
+        width: 100px;
+        font-weight: bold;
+        font-size: 1.3em;
+
+    }
+
+    .timer {
+        width: 0;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+    }
+
+    .stopwatch {
+        width: 0;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+    }
+
+    .slide-container p {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .timer,
+    .stopwatch {
+        transition: 0.5s ease;
+        opacity: 0;
+    }
+
+    .active {
+        opacity: 1;
+        width: 100%;
+    }
+</style>
+
+<body>
+    <div class="timer col active">
+        <div class="container">
+            <button id="minuteDown"><i class="fa-solid fa-chevron-down"></i></button>
+            <button id="minuteUp"><i class="fa-solid fa-chevron-up"></i></button>
+            <div class="labelsTimer">
+                <label for="" id="minutes">00</label>
+                <label for="">:</label>
+                <label for="" id="seconds">00</label>
+            </div>
+            <button id="secondUp"><i class="fa-solid fa-chevron-up"></i></button>
+            <button id="secondDown"><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+        <div class="timeup">
+            <h2>Time's up!</h2>
+        </div>
+        <div class="btns">
+            <button id="startCountdown">Start</button>
+            <button id="pauseCountdown">Pause</button>
+            <button id="resumeCountdown">Resume</button>
+            <button id="resetCountdown">Reset</button>
+        </div>
+        <div class="slide-container">
+            <button id="stopWatchBtn"><i class="fa-solid fa-chevron-right"></i></button>
+            <p>Slide To Stopwatch</p>
+        </div>
+    </div>
+
+    <div class="stopwatch col">
+        <div class="container">
+            <div class="labelsStopWatch">
+                <label for="" id="stopWatchMinutes">00</label>
+                <label for="">:</label>
+                <label for="" id="stopWatchSeconds">00</label>
+                <label for="">:</label>
+                <label for="" id="stopWatchMilliseconds">00</label>
+            </div>
+        </div>
+
+        <div class="btns">
+            <button id="startCount">Start</button>
+            <button id="pauseCount">Pause</button>
+            <button id="resumeCount">Resume</button>
+            <button id="resetCount">Reset</button>
+        </div>
+        <div class="slide-container">
+            <button id="timerBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            <p>Slide To Timer</p>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        //TIMER VARIABLES
+        const minuteUpButton = document.getElementById('minuteUp');
+        const minuteDownButton = document.getElementById('minuteDown');
+        const secondUpButton = document.getElementById('secondUp');
+        const secondDownButton = document.getElementById('secondDown');
+        const startCountdownButton = document.getElementById('startCountdown');
+        const pauseCountdownButton = document.getElementById('pauseCountdown');
+        const resumeCountdownButton = document.getElementById('resumeCountdown');
+        const resetCountdownButton = document.getElementById('resetCountdown');
+        const timeUp = document.querySelector('.timeup');
+        const labelsTimer = document.querySelector('.labelsTimer');
+        const minutesLabel = document.getElementById('minutes');
+        const secondsLabel = document.getElementById('seconds');
+        const timer = document.getElementById('timer');
+        const stopwatch = document.getElementById('stopWatch');
+        const slides = document.querySelectorAll('.col');
+        const stopWatchBtn = document.getElementById("stopWatchBtn");
+        const timerBtn = document.getElementById("timerBtn");
+
+        let minutes = 0;
+        let seconds = 0;
+        let interval = null;
+
+        //STOPWATCH VARIABLES
+
+        const startCount = document.getElementById('startCount');
+        const pauseCount = document.getElementById('pauseCount');
+        const resumeCount = document.getElementById('resumeCount');
+        const resetCount = document.getElementById('resetCount');
+        const stopwatchMinutesLabel = document.getElementById('stopWatchMinutes');
+        const stopwatchSecondsLabel = document.getElementById('stopWatchSeconds');
+        const stopWatchMillisecondsLabel = document.getElementById('stopWatchMilliseconds');
+
+        let stopwatchMinutes = 0;
+        let stopwatchSeconds = 0;
+        let stopwatchMilliseconds = 0;
+        let stopwatchInterval = null;
+
+
+        // TIMER FUNCTIONALITY
+        function stopWatchCount() {
+            if (!stopwatchInterval) {
+                stopwatchInterval = setInterval(function () {
+                    stopwatchMilliseconds++;
+                    if (stopwatchMilliseconds >= 100) {
+                        stopwatchMilliseconds = 0;
+                        stopwatchSeconds++;
+                    } else if (stopwatchSeconds >= 60) {
+                        stopwatchSeconds = 0;
+                        stopwatchMinutes++;
+                    }
+                    stopwatchMinutesLabel.textContent = (stopwatchMinutes < 10 ? '0' : '') + stopwatchMinutes;
+                    stopwatchSecondsLabel.textContent = (stopwatchSeconds < 10 ? '0' : '') + stopwatchSeconds;
+                    stopWatchMillisecondsLabel.textContent = (stopwatchMilliseconds < 10 ? '0' : '') + stopwatchMilliseconds;
+                }, 10)
+            }
+
+
+        }
+
+        startCount.onclick = function () {
+            stopWatchCount()
+        }
+
+
+        pauseCount.onclick = function () {
+            pauseCount.style.display = 'none'
+            resumeCount.style.display = 'flex'
+            startCount.disabled = true;
+            clearInterval(stopwatchInterval)
+            stopwatchInterval = null
+        }
+
+        resumeCount.onclick = function () {
+            pauseCount.style.display = 'flex'
+            resumeCount.style.display = 'none'
+            startCount.disabled = false;
+            stopWatchCount()
+        }
+
+        resetCount.onclick = function () {
+            stopwatchMinutes = 0
+            stopwatchSeconds = 0
+            stopwatchMilliseconds = 0
+            clearInterval(stopwatchInterval)
+            stopwatchInterval = null
+            updateTimeStopWatch()
+        }
+
+        // SLIDER
+        let currentIndex = 0
+
+        function showSlide(currentIndex) {
+            slides.forEach(e => {
+                e.classList.remove('active');
+            })
+            slides[currentIndex].classList.add("active")
+        }
+
+        stopWatchBtn.onclick = function () {
+            currentIndex++
+            showSlide(currentIndex)
+        }
+
+        timerBtn.onclick = function () {
+            currentIndex--
+            showSlide(currentIndex)
+        }
+
+        // FUNCTIONS
+        function updateTime() {
+            minutesLabel.textContent = (minutes < 10 ? '0' : '') + minutes;
+            secondsLabel.textContent = (seconds < 10 ? '0' : '') + seconds;
+        }
+
+        function updateTimeStopWatch() {
+            stopwatchMinutesLabel.textContent = (stopwatchMinutes < 10 ? '0' : '') + stopwatchMinutes;
+            stopwatchSecondsLabel.textContent = (stopwatchSeconds < 10 ? '0' : '') + stopwatchSeconds;
+            stopWatchMillisecondsLabel.textContent = (stopwatchMilliseconds < 10 ? '0' : '') + stopwatchMilliseconds;
+        }
+
+        function disableButtons() {
+            minuteUpButton.disabled = true;
+            minuteDownButton.disabled = true;
+            secondUpButton.disabled = true;
+            secondDownButton.disabled = true;
+        }
+
+        function enableButtons() {
+            minuteUpButton.disabled = false;
+            minuteDownButton.disabled = false;
+            secondUpButton.disabled = false;
+            secondDownButton.disabled = false;
+        }
+
+        function resetColor() {
+            if (minutes === 0 && seconds > 10) {
+                labelsTimer.style.color = "white";
+            }
+
+            if (minutes > 0) {
+                labelsTimer.style.color = "white";
+            }
+        }
+
+        function countDownInterval() {
+            interval = setInterval(function () {
+                if (seconds === 0 && minutes === 0) {
+                    clearInterval(interval);
+                    interval = null;
+                    disableButtons();
+                    timeUp.style.height = "50px";
+
+                    setTimeout(() => {
+                        enableButtons();
+                        timeUp.style.height = "0";
+                        labelsTimer.style.color = "white";
+                    }, 3000);
+
+                } else if (seconds === 0) {
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+
+                if (minutes === 0 && seconds <= 10 && seconds > 0) {
+                    labelsTimer.style.color = "red";
+                }
+                updateTime();
+            }, 1000);
+        }
+
+        function stopWatch() {
+
+        }
+
+        // INTERACTIVE BUTTONS
+        minuteUpButton.onclick = function () {
+            minutes = (minutes + 1) % 60;
+            updateTime();
+            resetColor()
+        };
+
+        minuteDownButton.onclick = function () {
+            minutes = (minutes - 1 + 60) % 60;
+            updateTime();
+            resetColor()
+        };
+
+        secondUpButton.onclick = function () {
+            seconds = (seconds + 1) % 60;
+            updateTime();
+            resetColor()
+        };
+
+        secondDownButton.onclick = function () {
+            seconds = (seconds - 1 + 60) % 60;
+            updateTime();
+            resetColor()
+        };
+
+        resetCountdownButton.onclick = function () {
+            minutes = 0;
+            seconds = 0;
+            updateTime();
+            enableButtons();
+            clearInterval(interval);
+            interval = null;
+            startCountdownButton.disabled = false;
+            labelsTimer.style.color = "white"
+        };
+
+        pauseCountdownButton.onclick = function () {
+            clearInterval(interval);
+            interval = null;
+            enableButtons();
+            startCountdownButton.disabled = false;
+            pauseCountdownButton.style.display = "none";
+            resumeCountdownButton.style.display = "flex";
+        };
+
+        resumeCountdownButton.onclick = function () {
+            pauseCountdownButton.style.display = "flex";
+            resumeCountdownButton.style.display = "none";
+            if (minutes === 0 && seconds === 0) {
+                return;
+            }
+
+            if (minutes === 0 && seconds <= 10) {
+                labelsTimer.style.color = "red"
+            }
+            disableButtons();
+            countDownInterval();
+
+        };
+
+        startCountdownButton.onclick = function () {
+            if (minutes === 0 && seconds === 0) {
+                return;
+            }
+            if (!interval) {
+                countDownInterval();
+                disableButtons();
+            }
+
+            if (minutes === 0 && seconds <= 10) {
+                labelsTimer.style.color = "red"
+            }
+        };
+    </script>
+</body>
+
+</html>
